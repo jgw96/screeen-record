@@ -19,7 +19,7 @@ export default {
     }),
     copy({
       targets: [
-        { src: 'src/index.html', dest: 'dist/', rename: 'index.html' },
+        { src: 'index.prod.html', dest: 'dist/', rename: 'index.html' },
         { src: 'assets/**/*', dest: 'dist/assets/' },
         { src: 'src/global.css', dest: 'dist/'},
         { src: 'manifest.json', dest: 'dist/'},

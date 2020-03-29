@@ -16,6 +16,7 @@
   "dependencies": {
     "@pwabuilder/pwainstall": "^1.4.2",
     "@vaadin/router": "^1.7.1",
+    "browser-nativefs": "^0.4.0",
     "lit-element": "^2.3.0"
   },
   "devDependencies": {

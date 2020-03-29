@@ -6,8 +6,28 @@ export class AppHeader extends LitElement {
 
   static get styles() {
     return css`
+      header {
+        background: #242424;
+        color: white;
+        font-size: 12px;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        backdrop-filter: blur(6px);
+        height: 2.4em;
+      }
+
       header h1 {
         margin-top: 0;
+        margin-bottom: 0;
+        font-weight: normal;
+        font-size: 20px;
+      }
+
+      @media all and (display-mode: standalone) {
+        header {
+          display: none;
+        }
       }
     `;
   }
@@ -19,12 +39,7 @@ export class AppHeader extends LitElement {
   render() {
     return html`
       <header>
-        <h1>PWA Starter</h1>
-
-        <nav>
-          <a href="./">Home</a>
-          <a href="./about">About</a>
-        </nav>
+        <h1>ScreenRecord</h1>
       </header>
     `;
   }

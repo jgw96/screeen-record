@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>PWA Starter</title>
+  <title>ScreenRecord</title>
 
   <meta name="viewport"
     content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -17,15 +17,14 @@
   <link rel="manifest" href="manifest.json">
 
   <link href="global.css" rel="stylesheet">
-
-  <script type="module" src="script/app-index.js"></script>
 </head>
 
 <body>
   <app-index></app-index>
 
+  <script type="module" src="script/app-index.js"></script>
   
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwaupdate"></script>
+  <script async defer type="module" src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwaupdate"></script>
   <pwa-update swpath="/pwabuilder-sw.js"></pwa-update>
 </body>
 
