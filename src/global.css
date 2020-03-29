@@ -11,3 +11,17 @@ html, body {
   height: 100%;
   background: #242424;
 }
+
+html img {
+  position: absolute;
+  bottom: 0;
+  right: 16px;
+  width: 40em;
+  background: transparent;
+}
+
+@media (max-width: 800px) {
+  html img {
+    display: none;
+  }
+}

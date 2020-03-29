@@ -6,13 +6,16 @@
   <title>ScreenRecord</title>
 
   <meta name="viewport"
-    content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
   <meta name="description" content="This is a PWA Starter app">
   <meta name="theme-color" content="#686bd2">
 
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="PWA Starter">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <link rel="preload" href="global.css">
+  <link rel="preload" href="script/app-index.js">
 
   <link rel="manifest" href="manifest.json">
 
@@ -26,6 +29,8 @@
   
   <script async defer type="module" src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwaupdate"></script>
   <pwa-update swpath="/pwabuilder-sw.js"></pwa-update>
+
+  <img src="assets/graphic.svg"></img>
 </body>
 
 </html>

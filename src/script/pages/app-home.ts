@@ -1,9 +1,5 @@
 import { LitElement, css, html, customElement, property } from 'lit-element';
 
-import {
-  fileSave,
-} from 'browser-nativefs';
-
 import '@pwabuilder/pwainstall';
 
 declare var MediaRecorder: any;
@@ -64,11 +60,12 @@ export class AppHome extends LitElement {
 
        #videoBlock video {
          width: 100%;
+         z-index: 9;
        }
 
        #videoActions {
         display: flex;
-        width: 100%;
+        width: 50%;
         margin-top: 1em;
 
         flex-direction: column;
@@ -115,6 +112,26 @@ export class AppHome extends LitElement {
        #videoActions #recordingBlock {
          display: flex;
          justify-content: flex-end;    
+
+          flex-direction: column;
+          color: white;
+          box-shadow: 0px 0px 8px 4px #191919;
+          padding: 1.6em;
+          border-radius: 8px;
+          width: 22em;
+       }
+
+       #recordingBlock h2 {
+         margin-top: 0;
+         font-size: 1.6em;
+       }
+
+       #recordingBlock h2 {
+         margin-bottom: 1.4em;
+       }
+
+       #recordingOptions label {
+         font-weight: bold;
        }
 
        #saveBlock {
@@ -130,6 +147,18 @@ export class AppHome extends LitElement {
 
        pwa-install::part(openButton) {
          background: var(--app-color-primary);
+       }
+
+       #recordActions {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+       }
+
+       #recordingOptions {
+        display: flex;
+        flex-direction: column;
+        color: white;
        }
 
        @media (min-width: 1000px) {
@@ -164,9 +193,10 @@ export class AppHome extends LitElement {
          }
        }
 
-       @media (max-width: 600px) {
+       @media (max-width: 780px) {
          #videoActions {
           justify-content: space-around;
+          width: 100%;
          }
 
          #videoActions #recordingBlock {
@@ -178,6 +208,10 @@ export class AppHome extends LitElement {
          }
 
          #videoActions #file {
+           display: none;
+         }
+
+         #recordingBlock h2 {
            display: none;
          }
        }
@@ -222,16 +256,6 @@ export class AppHome extends LitElement {
     }
 
     await this.mediaRecorder.start(2000);
-
-    /*this.mediaRecorder.addEventListener('dataavailable', (event: any) => {
-      console.log(event);
-
-      this.recordedChunks.push(event.data);
-      console.log(this.recordedChunks);
-    })/*
-
-    await this.mediaRecorder.start();
-    this.recording = true;*/
   }
 
 
@@ -267,7 +291,9 @@ export class AppHome extends LitElement {
       type: "video/webm"
     });
 
-    await fileSave(blob, {
+    const module = await import('browser-nativefs');
+
+    await module.fileSave(blob, {
       fileName: 'recording.webm',
     });
 
@@ -290,8 +316,22 @@ export class AppHome extends LitElement {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
 
-  share() {
+  async share() {
+    const blob = new Blob(this.recordedChunks, {
+      type: "video/webm"
+    });
 
+    let file = new File([blob], 'recording.webm');
+    if ((navigator as any).canShare && (navigator as any).canShare({ file: file })) {
+      console.log('trying to share  ')
+      await (navigator as any).share({
+        file: file,
+        title: 'recording',
+        text: '',
+      })
+    } else {
+      console.log(`Your system doesn't support sharing files.`);
+    }
   }
 
   render() {
@@ -314,10 +354,18 @@ export class AppHome extends LitElement {
               <p>Size: ${this.formatBytes(this.recordedVideo.size)}</p>
             </div>` : null}
 
-            <div id="recordingBlock">
+            ${!this.recorded ? html`<div id="recordingBlock">
+
+              <h2>Recording Actions</h2>
+
+              <div id="recordActions">
               ${!this.recorded ? html`${!this.recording ? html`<button @click=${() => this.startRecording()}>Start Recording</button>` : html`<button @click=${() => this.stopRecording()}>Stop Recording</button>`}` : null}
+              ${!this.recorded && !this.recording ? html` <div id="recordingOptions">
+              </div>` : null}
               ${this.recording ? html`<button id="pipButton" @click=${() => this.startPip()}>Picture in Picture</button>` : null}
-            </div>
+              </div>
+              
+            </div>` : null}
 
             <div id="saveBlock">
               ${this.recorded ? html`<button @click=${() => this.save()} id="saveButton">Save</button>` : null}

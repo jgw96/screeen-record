@@ -1,5 +1,6 @@
 import resolve from 'rollup-plugin-node-resolve';
 import { terser } from "rollup-plugin-terser";
+import { injectManifest } from 'rollup-plugin-workbox';
 import minifyHTML from 'rollup-plugin-minify-html-literals';
 import strip from '@rollup/plugin-strip';
 import copy from 'rollup-plugin-copy';
@@ -24,6 +25,19 @@ export default {
         { src: 'src/global.css', dest: 'dist/'},
         { src: 'manifest.json', dest: 'dist/'},
         { src: 'pwabuilder-sw.js', dest: 'dist/'}
+      ]
+    }),
+     injectManifest({
+      swSrc: 'pwabuilder-sw.js',
+      swDest: 'dist/pwabuilder-sw.js',
+      globDirectory: 'dist/',
+      globPatterns: [
+        '*.css',
+        '**/*/*.svg',
+        '*/**.js',
+        '*.html',
+        'assets/**',
+        '*.json'
       ]
     })
   ]

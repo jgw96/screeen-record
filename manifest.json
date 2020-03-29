@@ -2,9 +2,9 @@
   "name": "ScreenRecord",
   "display": "standalone",
   "start_url": "/",
-  "short_name": "starter",
+  "short_name": "ScreenRecord",
   "theme_color": "#686bd2",
-  "description": "This is a PWA Starter app",
+  "description": "Easy, fast screen recording software.",
   "orientation": "any",
   "background_color": "#686bd2",
   "related_applications": [],
@@ -26,6 +26,5 @@
       "src": "assets/icons/icon_24.png",
       "sizes": "24x24"
     }
-  ],
-  "screenshots": []
+  ]
 }
