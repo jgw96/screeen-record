@@ -111,7 +111,8 @@ export class AppHome extends LitElement {
 
        #videoActions #recordingBlock {
          display: flex;
-         justify-content: flex-end;    
+         justify-content: flex-end;  
+         margin-top: 0.8em;  
 
           flex-direction: column;
           color: white;
