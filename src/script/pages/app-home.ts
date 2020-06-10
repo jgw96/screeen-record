@@ -101,6 +101,10 @@ export class AppHome extends LitElement {
          background: var(--app-color-secondary);
        }
 
+       #videoActions #resetBlock #resetButton {
+         background: #F44336;
+       }
+
        #videoActions #file {
          display: flex;
          flex-direction: column;
@@ -162,6 +166,13 @@ export class AppHome extends LitElement {
         color: white;
        }
 
+       #resetBlock {
+        display: flex;
+        bottom: 0;
+        margin-top: 8px;
+        justify-content: center;
+       }
+
        @media (min-width: 1000px) {
          #wrapper {
           display: flex;
@@ -192,16 +203,38 @@ export class AppHome extends LitElement {
          #pipButton, #shareButton {
            margin-left: 1em;
          }
+
+         E
        }
 
        @media (max-width: 780px) {
          #videoActions {
           justify-content: space-around;
           width: 100%;
+
+          
          }
 
          #videoActions #recordingBlock {
            justify-content: center;
+
+           position: absolute;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            width: 100%;
+            padding: 0;
+            box-shadow: none;
+
+         }
+
+         #recordActions button {
+          width: 100%;
+          max-width: none;
+
+          margin-bottom: 16px;
+          margin-left: 16px;
+          margin-right: 16px;
          }
 
          #videoActions #pipButton, #saveBlock #shareButton {
@@ -285,6 +318,13 @@ export class AppHome extends LitElement {
     const preview = ((this.shadowRoot as any).querySelector('#preview') as HTMLVideoElement);
 
     preview.src = window.URL.createObjectURL(blob);
+  }
+
+  reset() {
+    this.recorded = false;
+    this.recordedVideo = null;
+
+    this.stream = null;
   }
 
   async save() {
@@ -371,6 +411,10 @@ export class AppHome extends LitElement {
             <div id="saveBlock">
               ${this.recorded ? html`<button @click=${() => this.save()} id="saveButton">Save</button>` : null}
               ${this.recorded ? html`<button @click=${() => this.share()} id="shareButton">Share</button>` : null}
+            </div>
+
+            <div id="resetBlock">
+              ${this.recorded ? html`<button @click=${() => this.reset()} id="resetButton">Reset</button>` : null}
             </div>
           </div>
         `
