@@ -9,7 +9,8 @@ html, body {
   padding: 0;
   margin: 0;
   height: 100%;
-  background: #242424;
+  background: rgb(36,36,36);
+  background: linear-gradient(135deg, rgba(36,36,36,1) 22%, rgba(104,107,210,1) 100%);
 }
 
 html img {
