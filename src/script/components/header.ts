@@ -7,7 +7,7 @@ export class AppHeader extends LitElement {
   static get styles() {
     return css`
       header {
-        background: #242424;
+        background: rgba(36, 36, 36, 0.8);
         color: white;
         font-size: 12px;
         padding: 12px;

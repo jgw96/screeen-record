@@ -18,64 +18,92 @@ export class AppHome extends LitElement {
 
   @property({ type: File }) recordedVideo: File | null = null;
 
-  @property({ type: Array }) videos: any[] | null =  null;
+  @property({ type: Array }) videos: any[] | null = null;
 
   static get styles() {
     return css`
+      header {
+        background: rgba(36, 36, 36, 0.82);
+        color: white;
+        font-size: 12px;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        backdrop-filter: blur(6px);
+        height: 2.4em;
+
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+
+        display: flex;
+        justify-content: space-between;
+      }
+
+      #videosBlock {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #videosBlock video {
+        width: 60em;
+        margin-bottom: 2em;
+      }
+
+      #videoBlock {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 90vh;
+      }
+
+      #videoBlock video {
+        width: 70vw;
+      }
+
+      header h1 {
+        margin-top: 0;
+        margin-bottom: 0;
+        font-weight: normal;
+        font-size: 20px;
+      }
+
+      #headerActions {
+        display: flex;
+      }
+
+      #headerActions button {
+        background: transparent;
+        color: white;
+        border: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        font-size: 1.3em;
+        border-radius: 8px;
+        padding: 8px;
+      }
+
+      #headerActions button:hover {
+        background: black;
+      }
+
+      #headerActions button ion-icon {
+        font-size: 1.2em;
+        margin-right: 4px;
+      }
+
        #chooseBlock {
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          margin-top: 4em;
-       }
-
-       #videosBlock {
-        z-index: 999;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(356px, 1fr));
-
-        overflow-x: hidden;
-        height: 21em;
-        overflow-y: scroll;
-
-        background: #1c1c1cc9;
-        backdrop-filter: blur(12px);
-
-        padding-top: 1em;
-        padding-bottom: 4em;
-        grid-gap: 10px;
-        padding: 16px;
-       }
-
-       #videosBlock .videoCard {
-         display: flex;
-         flex-direction: column;
-         justify-content: center;
-         align-items: center;
-         background: #1c1b1b;
-          padding: 8px;
-          border-radius: 8px;
-       }
-
-       .videoCard span {
-        color: white;
-        padding: 6px;
-        font-size: 22px;
-        font-weight: bold;
-        margin-left: 8px;
-        text-align: center;
-       }
-
-       #videosBlock video {
-        height: 100%;
-        width: 100%;
-        margin: 16px;
+          margin-bottom: 4em;
+          margin-top: 2em;
        }
 
        #chooseBlock button {
@@ -99,20 +127,6 @@ export class AppHome extends LitElement {
         text-align: center;
         color: white;
         font-size: 1.4em;
-       }
-
-       #videoBlock {
-        height: 80vh;
-        width: 100%;
-        display: flex;
-        margin: 0;
-        padding: 0;
-        justify-content: center;
-       }
-
-       #videoBlock video {
-         width: 100%;
-         z-index: 9;
        }
 
        #videoActions {
@@ -235,47 +249,28 @@ export class AppHome extends LitElement {
         justify-content: center;
        }
 
+       #wrapper {
+        height: auto;
+        padding-top: 3.2em;
+       }
+
        @media (min-width: 1000px) {
-         #wrapper {
-          display: flex;
-          height: 84vh;
-         }
+
 
          #chooseBlock {
            width: 100%;
            margin-top: 0;
-           margin-bottom: 18em;
-         }
-
-         #videoBlock {
-          height: 100%;
-          align-items: flex-start;
-          padding: 2em;
+           margin-bottom: 4em;
+           margin-top: 2em;
          }
 
          #videoActions {
            padding-right: 1em;
          }
 
-         #videosBlock {
-          margin: 1em;
-          border-radius: 20px;
-          box-shadow: 0 0 16px 6px #0b0b0be6;
-         }
-
-         #videosBlock::-webkit-scrollbar {
-           display: none;
-         }
-
          video {
           box-shadow: 0px 0px 9px 6px #0e0e0e;
          }
-
-         #pipButton, #shareButton {
-           margin-left: 1em;
-         }
-
-         E
        }
 
        @media (max-width: 780px) {
@@ -306,10 +301,6 @@ export class AppHome extends LitElement {
           margin-bottom: 16px;
           margin-left: 16px;
           margin-right: 16px;
-         }
-
-         #videoActions #pipButton, #saveBlock #shareButton {
-           margin-left: 14px;
          }
 
          #videoActions #file {
@@ -410,22 +401,22 @@ export class AppHome extends LitElement {
       type: "video/webm"
     });
 
-   /* const module = await import('browser-nativefs');
-
-    await module.fileSave(blob, {
-      fileName: 'recording.webm',
-    });*/
+    /* const module = await import('browser-nativefs');
+ 
+     await module.fileSave(blob, {
+       fileName: 'recording.webm',
+     });*/
 
     const videos: any[] = await get('videos');
 
     if (videos) {
-      videos.push({name: this.fileName, blob: blob});
+      videos.push({ name: this.fileName, blob: blob });
       await set('videos', videos);
 
       await this.reset();
     }
     else {
-      await set('videos', [{name: this.fileName, blob: blob}]);
+      await set('videos', [{ name: this.fileName, blob: blob }]);
 
       await this.reset();
     }
@@ -474,6 +465,18 @@ export class AppHome extends LitElement {
 
   render() {
     return html`
+      <header>
+        <h1>ScreenRecord</h1>
+
+        <div id="headerActions">
+          ${!this.recorded ? html`${!this.recording ? html`<button @click=${() => this.startRecording()}><ion-icon name="play-outline"></ion-icon> Start Recording</button>` : html`<button @click=${() => this.stopRecording()}><ion-icon name="stop-outline"></ion-icon> Stop Recording</button>`}` : null}
+          ${this.recording ? html`<button id="pipButton" @click=${() => this.startPip()}><ion-icon name="grid-outline"></ion-icon> Picture in Picture</button>` : null}
+
+          ${this.recorded ? html`<button @click=${() => this.save()} id="saveButton"><ion-icon name="save-outline"></ion-icon> Save</button>` : null}
+          ${this.recorded ? html`<button @click=${() => this.share()} id="shareButton"><ion-icon name="share-outline"></ion-icon> Share</button>` : null}
+        </div>
+      </header>
+
       <div id="wrapper">
 
         ${ !this.stream ? html`
@@ -483,18 +486,15 @@ export class AppHome extends LitElement {
         </div>
 
         ${
-          !this.stream && this.videos ? html`
+        !this.stream && this.videos ? html`
             <div id="videosBlock">
               ${
-                this.videos.map((video) => {
-                  return html`
-                    <div class="videoCard">
-                      <span>${video.name}</span>
-                      <video .src="${window.URL.createObjectURL(video.blob)}" controls></video>
-                    </div>
+          this.videos.map((video) => {
+            return html`
+              <video .src="${window.URL.createObjectURL(video.blob)}" controls></video>
                   `
-                })
-              }
+          })
+          }
             </div>
           ` : null
         }
@@ -503,36 +503,6 @@ export class AppHome extends LitElement {
         html`
           <div id="videoBlock">
             ${!this.recorded ? html`<video></video>` : html`<video id="preview" controls autoplay></video>`}
-          </div>
-
-          <div id="videoActions">
-
-            ${this.recorded && this.recordedVideo ? html`<div id="file">
-              <input type="text" .value="${this.fileName}" @input="${(event: any) => this.handleName(event)}"></h3>
-              <p>Size: ${this.formatBytes(this.recordedVideo.size)}</p>
-            </div>` : null}
-
-            ${!this.recorded ? html`<div id="recordingBlock">
-
-              <h2>Recording Actions</h2>
-
-              <div id="recordActions">
-                ${!this.recorded ? html`${!this.recording ? html`<button @click=${() => this.startRecording()}>Start Recording</button>` : html`<button @click=${() => this.stopRecording()}>Stop Recording</button>`}` : null}
-                ${!this.recorded && !this.recording ? html` <div id="recordingOptions">
-                </div>` : null}
-                ${this.recording ? html`<button id="pipButton" @click=${() => this.startPip()}>Picture in Picture</button>` : null}
-              </div>
-              
-            </div>` : null}
-
-            <div id="saveBlock">
-              ${this.recorded ? html`<button @click=${() => this.save()} id="saveButton">Save</button>` : null}
-              ${this.recorded ? html`<button @click=${() => this.share()} id="shareButton">Share</button>` : null}
-            </div>
-
-            <div id="resetBlock">
-              ${this.recorded ? html`<button @click=${() => this.reset()} id="resetButton">Reset</button>` : null}
-            </div>
           </div>
         `
       }
