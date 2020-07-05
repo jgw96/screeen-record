@@ -1,7 +1,5 @@
 import { LitElement, css, html, customElement, property } from 'lit-element';
 
-import { get, set } from 'idb-keyval';
-
 import '@pwabuilder/pwainstall';
 
 declare var MediaRecorder: any;
@@ -17,8 +15,6 @@ export class AppHome extends LitElement {
   @property({ type: String }) fileName: string = 'recording';
 
   @property({ type: File }) recordedVideo: File | null = null;
-
-  @property({ type: Array }) videos: any[] | null = null;
 
   static get styles() {
     return css`
@@ -318,14 +314,6 @@ export class AppHome extends LitElement {
     super();
   }
 
-  async firstUpdated() {
-    const saved: any[] = await get('videos');
-
-    if (saved) {
-      this.videos = saved;
-    }
-  }
-
   async chooseScreen() {
     const displayMediaOptions = {
       video: {
@@ -388,12 +376,6 @@ export class AppHome extends LitElement {
     this.recorded = false;
     this.recordedVideo = null;
     this.stream = null;
-
-    const saved: any[] = await get('videos');
-
-    if (saved) {
-      this.videos = saved;
-    }
   }
 
   async save() {
@@ -401,25 +383,11 @@ export class AppHome extends LitElement {
       type: "video/webm"
     });
 
-    /* const module = await import('browser-nativefs');
+    const module = await import('browser-nativefs');
  
      await module.fileSave(blob, {
        fileName: 'recording.webm',
-     });*/
-
-    const videos: any[] = await get('videos');
-
-    if (videos) {
-      videos.push({ name: this.fileName, blob: blob });
-      await set('videos', videos);
-
-      await this.reset();
-    }
-    else {
-      await set('videos', [{ name: this.fileName, blob: blob }]);
-
-      await this.reset();
-    }
+     });
 
   }
 
@@ -469,11 +437,12 @@ export class AppHome extends LitElement {
         <h1>ScreenRecord</h1>
 
         <div id="headerActions">
-          ${!this.recorded ? html`${!this.recording ? html`<button @click=${() => this.startRecording()}><ion-icon name="play-outline"></ion-icon> Start Recording</button>` : html`<button @click=${() => this.stopRecording()}><ion-icon name="stop-outline"></ion-icon> Stop Recording</button>`}` : null}
+          ${!this.recorded && this.stream ? html`${!this.recording ? html`<button @click=${() => this.startRecording()}><ion-icon name="play-outline"></ion-icon> Start Recording</button>` : html`<button @click=${() => this.stopRecording()}><ion-icon name="stop-outline"></ion-icon> Stop Recording</button>`}` : null}
           ${this.recording ? html`<button id="pipButton" @click=${() => this.startPip()}><ion-icon name="grid-outline"></ion-icon> Picture in Picture</button>` : null}
 
           ${this.recorded ? html`<button @click=${() => this.save()} id="saveButton"><ion-icon name="save-outline"></ion-icon> Save</button>` : null}
           ${this.recorded ? html`<button @click=${() => this.share()} id="shareButton"><ion-icon name="share-outline"></ion-icon> Share</button>` : null}
+          ${this.recorded ? html`<button @click=${() => this.reset()} id="shareButton"><ion-icon name="refresh-outline"></ion-icon> Reset</button>` : null}
         </div>
       </header>
 
@@ -484,20 +453,6 @@ export class AppHome extends LitElement {
           <p>Tap the button below to choose a screen to record and get started!</p>
           <button @click=${() => this.chooseScreen()}>Choose Screen</button>
         </div>
-
-        ${
-        !this.stream && this.videos ? html`
-            <div id="videosBlock">
-              ${
-          this.videos.map((video) => {
-            return html`
-              <video .src="${window.URL.createObjectURL(video.blob)}" controls></video>
-                  `
-          })
-          }
-            </div>
-          ` : null
-        }
         
         ` :
         html`
