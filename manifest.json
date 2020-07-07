@@ -15,8 +15,8 @@
       "sizes": "512x512"
     },
     {
-      "src": "assets/icons/icon_192.png",
-      "sizes": "192x192"
+      "src": "assets/icons/icon_256.png",
+      "sizes": "256x256"
     },
     {
       "src": "assets/icons/icon_48.png",
