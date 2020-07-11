@@ -15,6 +15,7 @@ export class AppHome extends LitElement {
   @property({ type: String }) fileName: string = 'recording';
 
   @property({ type: File }) recordedVideo: File | null = null;
+  @property({ type: Boolean }) supported: boolean = false;
 
   static get styles() {
     return css`
@@ -312,6 +313,14 @@ export class AppHome extends LitElement {
 
   constructor() {
     super();
+
+    const supportCheck = this.doSupportCheck();
+    console.log(supportCheck);
+    this.supported = supportCheck;
+  }
+
+  doSupportCheck() {
+    return ('mediaDevices' in navigator && 'getDisplayMedia' in navigator.mediaDevices);
   }
 
   async chooseScreen() {
@@ -323,7 +332,6 @@ export class AppHome extends LitElement {
     };
 
     this.stream = await (navigator.mediaDevices as any).getDisplayMedia(displayMediaOptions);
-
 
     await this.updateComplete;
 
@@ -384,10 +392,10 @@ export class AppHome extends LitElement {
     });
 
     const module = await import('browser-nativefs');
- 
-     await module.fileSave(blob, {
-       fileName: 'recording.webm',
-     });
+
+    await module.fileSave(blob, {
+      fileName: 'recording.webm',
+    });
 
   }
 
@@ -448,6 +456,7 @@ export class AppHome extends LitElement {
 
       <div id="wrapper">
 
+        ${this.supported ? html`
         ${ !this.stream ? html`
         <div id="chooseBlock">
           <p>Tap the button below to choose a screen to record and get started!</p>
@@ -455,12 +464,14 @@ export class AppHome extends LitElement {
         </div>
         
         ` :
-        html`
+          html`
           <div id="videoBlock">
             ${!this.recorded ? html`<video></video>` : html`<video id="preview" controls autoplay></video>`}
           </div>
         `
-      }
+        }
+        ` : html`<h2 id="noSupportMessage">Unfortunately your browser does not support the neccessary APIs this app requires to work</h2>`}
+
 
         <pwa-install>Install ScreenRecord</pwa-install>
       </div>
