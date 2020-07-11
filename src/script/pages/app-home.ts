@@ -38,6 +38,30 @@ export class AppHome extends LitElement {
         justify-content: space-between;
       }
 
+      #mobileToolbar {
+        backdrop-filter: blur(6px);
+        height: 2.4em;
+        position: fixed;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        display: none;
+        justify-content: flex-end;
+        background: rgba(36, 36, 36, 0.82);
+        padding: 12px;
+
+        color: white;
+        font-size: 12px;
+        align-items: center;
+      }
+
+      #noSupportMessage {
+        color: white;
+        text-align: center;
+        padding: 1em;
+        font-size: 1.2em;
+      }
+
       #videosBlock {
         display: flex;
         flex-direction: column;
@@ -72,7 +96,7 @@ export class AppHome extends LitElement {
         display: flex;
       }
 
-      #headerActions button {
+      #headerActions button, #mobileToolbar button {
         background: transparent;
         color: white;
         border: none;
@@ -89,7 +113,7 @@ export class AppHome extends LitElement {
         background: black;
       }
 
-      #headerActions button ion-icon {
+      #headerActions button ion-icon, #mobileToolbar button ion-icon {
         font-size: 1.2em;
         margin-right: 4px;
       }
@@ -110,7 +134,7 @@ export class AppHome extends LitElement {
         font-weight: normal;
         text-transform: uppercase;
         font-size: 14px;
-        border-radius: 4px;
+        border-radius: 10px;
         min-width: 11em;
         cursor: pointer;
 
@@ -271,11 +295,17 @@ export class AppHome extends LitElement {
        }
 
        @media (max-width: 780px) {
+         #headerActions {
+           display: none;
+         }
+
+         #mobileToolbar {
+           display: flex;
+         }
+
          #videoActions {
           justify-content: space-around;
           width: 100%;
-
-          
          }
 
          #videoActions #recordingBlock {
@@ -288,7 +318,6 @@ export class AppHome extends LitElement {
             width: 100%;
             padding: 0;
             box-shadow: none;
-
          }
 
          #recordActions button {
@@ -320,7 +349,7 @@ export class AppHome extends LitElement {
   }
 
   doSupportCheck() {
-    return ('mediaDevices' in navigator && 'getDisplayMedia' in navigator.mediaDevices);
+    return ('mediaDevices' in navigator && 'getDisplayMedia' in navigator.mediaDevices && navigator.userAgent.includes("Android") === false);
   }
 
   async chooseScreen() {
@@ -470,11 +499,20 @@ export class AppHome extends LitElement {
           </div>
         `
         }
-        ` : html`<h2 id="noSupportMessage">Unfortunately your browser does not support the neccessary APIs this app requires to work</h2>`}
+        ` : html`<h2 id="noSupportMessage">Unfortunately your browser does not support the neccessary APIs this app requires to work.</h2>`}
 
 
         <pwa-install>Install ScreenRecord</pwa-install>
       </div>
+
+      ${this.stream ? html`<div id="mobileToolbar">
+        ${!this.recorded && this.stream ? html`${!this.recording ? html`<button @click=${() => this.startRecording()}><ion-icon name="play-outline"></ion-icon> Start Recording</button>` : html`<button @click=${() => this.stopRecording()}><ion-icon name="stop-outline"></ion-icon> Stop Recording</button>`}` : null}
+        ${this.recording ? html`<button id="pipButton" @click=${() => this.startPip()}><ion-icon name="grid-outline"></ion-icon> Picture in Picture</button>` : null}
+
+        ${this.recorded ? html`<button @click=${() => this.save()} id="saveButton"><ion-icon name="save-outline"></ion-icon> Save</button>` : null}
+        ${this.recorded ? html`<button @click=${() => this.share()} id="shareButton"><ion-icon name="share-outline"></ion-icon> Share</button>` : null}
+        ${this.recorded ? html`<button @click=${() => this.reset()} id="shareButton"><ion-icon name="refresh-outline"></ion-icon> Reset</button>` : null}
+      </div>` : null}
     `;
   }
 }
