@@ -374,7 +374,9 @@ export class AppHome extends LitElement {
   async startRecording() {
     this.recording = true;
 
-    this.mediaRecorder = new MediaRecorder(this.stream, { mimeType: "video/webm; codecs=vp9" });
+    const betterMime = MediaRecorder.isTypeSupported("video/webm; codecs=vp9");
+
+    this.mediaRecorder = new MediaRecorder(this.stream, { mimeType: betterMime ? "video/webm; codecs=vp9" : "video/webm; codecs=vp8" });
 
     this.mediaRecorder.ondataavailable = (event: any) => {
       this.recordedChunks.push(event.data);
@@ -416,14 +418,13 @@ export class AppHome extends LitElement {
   }
 
   async save() {
-    var blob = new Blob(this.recordedChunks, {
-      type: "video/webm"
-    });
-
     const module = await import('browser-nativefs');
+
+    const blob = new Blob(this.recordedChunks);
 
     await module.fileSave(blob, {
       fileName: 'recording.webm',
+      extensions: ['webm'],
     });
 
   }
